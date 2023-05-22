@@ -129,7 +129,7 @@ export const useClient = (props: UseClientProps): ClientState => {
                         console.log(`error:${mes}`)
                         errorCountRef.current += 1
                         if (errorCountRef.current > 100) {
-                            alert("エラーが頻発しています。対象としているフレームワークのモデルがロードされているか確認してください。")
+                            alert("エラーが頻発しています。対象としているフレームワークのモデルがロードされているか確認してください。Errors are occurring frequently. Please check if the framework model you are targeting has been loaded")
                             errorCountRef.current = 0
                         }
                     }
