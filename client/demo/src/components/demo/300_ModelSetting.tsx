@@ -28,6 +28,8 @@ export const ModelSetting = () => {
         })
         return (
             <>
+
+                <div>bbbbbbbbb7</div>
                 {guiState.stateControls.openModelSettingCheckbox.trigger}
                 <div className="partition">
                     <div className="partition-header">
@@ -44,6 +46,7 @@ export const ModelSetting = () => {
                         {components}
                     </div>
                 </div>
+                <div>bbbbbbbbb8</div>
             </>
         )
     }, [])
