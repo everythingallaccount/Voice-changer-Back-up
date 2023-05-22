@@ -12,8 +12,9 @@ export const TitleArea = () => {
             return <div key={`${x.name}_${index}`}>{c}</div>
         })
         return (
-            <>
+            <><div>b3</div>
                 {components}
+                <div>bbbbbbbbb4</div>
             </>
         )
     }, [])
