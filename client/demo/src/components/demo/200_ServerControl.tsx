@@ -29,6 +29,7 @@ export const ServerControl = () => {
         })
         return (
             <>
+                <div>bbbbbbbbb5</div>
                 {guiState.stateControls.openServerControlCheckbox.trigger}
                 <div className="partition">
                     <div className="partition-header">
@@ -44,6 +45,7 @@ export const ServerControl = () => {
                         {components}
                     </div>
                 </div>
+                <div>bbbbbbbbb6</div>
             </>
         )
     }, [])
