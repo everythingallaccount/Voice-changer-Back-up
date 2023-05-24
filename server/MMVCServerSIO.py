@@ -325,9 +325,12 @@ if __name__ == "__main__":
         p.start()
         try:
             if sys.platform.startswith("win"):
+                print("eeeeeeeeeeeeeeeeeeeeeeeeeeee2",NATIVE_CLIENT_FILE_WIN)
+
                 process = subprocess.Popen(
                     [NATIVE_CLIENT_FILE_WIN, "-u", f"http://localhost:{PORT}/"]
                 )
+                print("eeeeeeeeeeeeeeeeeeeeeeeeeeee3")
                 return_code = process.wait()
                 print("client closed.")
                 p.terminate()
@@ -340,4 +343,5 @@ if __name__ == "__main__":
                 p.terminate()
 
         except Exception as e:
+            print("eeeeeeeeeeeeeeeeeeeeeeeeeeee")
             print(e)
