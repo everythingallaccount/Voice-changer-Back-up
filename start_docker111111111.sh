@@ -17,14 +17,11 @@ USE_LOCAL=${USE_LOCAL:-${DEFAULT_USE_LOCAL}}
 
 
 
-if [ "${USE_GPU}" = "on" ]; then
-    echo "VC Client start...(with gpu)"
+#!/bin/bash
 
-
-
-    docker run -it --rm --gpus all --shm-size=1024M \
+command="docker run -it --rm --gpus all --shm-size=1024M \
     -v `pwd`/docker_vcclient/weights:/weights \
-    -e EX_IP="`hostname -I`" \
+    -e EX_IP=`hostname -I` \
     -e EX_PORT=${EX_PORT} \
     -e LOCAL_UID=$(id -u $USER) \
     -e LOCAL_GID=$(id -g $USER) \
@@ -35,23 +32,13 @@ if [ "${USE_GPU}" = "on" ]; then
         --hubert_soft pretrain/hubert/hubert-soft-0d54a1f4.pt \
         --nsf_hifigan pretrain/nsf_hifigan/model \
         --hubert_base_jp pretrain/rinna_hubert_base_jp.pt \
-        --model_dir model_dir
-else
-    echo "VC Client start...(cpu)"
-    docker run -it --rm --shm-size=1024M \
-    -v `pwd`/docker_vcclient/weights:/weights \
-    -e EX_IP="`hostname -I`" \
-    -e EX_PORT=${EX_PORT} \
-    -e LOCAL_UID=$(id -u $USER) \
-    -e LOCAL_GID=$(id -g $USER) \
-    -p ${EX_PORT}:18888 \
-    $DOCKER_IMAGE -p 18888 --https true \
-        --content_vec_500 pretrain/checkpoint_best_legacy_500.pt  \
-        --hubert_base pretrain/hubert_base.pt \
-        --hubert_soft pretrain/hubert/hubert-soft-0d54a1f4.pt \
-        --nsf_hifigan pretrain/nsf_hifigan/model \
-        --hubert_base_jp pretrain/rinna_hubert_base_jp.pt \
-        --model_dir model_dir
-fi
+        --model_dir model_dir"
 
+echo "The command is: $command"
 
+#eval "$command"
+
+"
+docker run -it --rm --gpus all --shm-size=1024M     -v /mnt/c/Users/whousethispc/Desktop/master/Voice Changer Projectttt/voice-changer/docker_vcclient/weights:/weights     -e EX_IP=192.168.191.96      -e EX_PORT=18888     -e LOCAL_UID=1000     -e LOCAL_GID=1000     -p 18888:18888     vcclient -p 18888 --https true         --content_vec_500 pretrain/checkpoint_best_legacy_500.pt          --hubert_base pretrain/hubert_base.pt         --hubert_soft pretrain/hubert/hubert-soft-0d54a1f4.pt         --nsf_hifigan pretrain/nsf_hifigan/model         --hubert_base_jp pretrain/rinna_hubert_base_jp.pt         --model_dir model_dir
+
+"
