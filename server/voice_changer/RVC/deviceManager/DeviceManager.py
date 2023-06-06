@@ -1,8 +1,10 @@
 import torch
+import onnxruntime
 
 
 class DeviceManager(object):
     _instance = None
+    forceTensor: bool = False
 
     @classmethod
     def get_instance(cls):
@@ -26,10 +28,31 @@ class DeviceManager(object):
             dev = torch.device("cuda", index=id)
         return dev
 
+    def getOnnxExecutionProvider(self, gpu: int):
+        availableProviders = onnxruntime.get_available_providers()
+        devNum = torch.cuda.device_count()
+        if gpu >= 0 and "CUDAExecutionProvider" in availableProviders and devNum > 0:
+            return ["CUDAExecutionProvider"], [{"device_id": gpu}]
+        elif gpu >= 0 and "DmlExecutionProvider" in availableProviders:
+            return ["DmlExecutionProvider"], [{}]
+        else:
+            return ["CPUExecutionProvider"], [
+                {
+                    "intra_op_num_threads": 8,
+                    "execution_mode": onnxruntime.ExecutionMode.ORT_PARALLEL,
+                    "inter_op_num_threads": 8,
+                }
+            ]
+
+    def setForceTensor(self, forceTensor: bool):
+        self.forceTensor = forceTensor
+
     def halfPrecisionAvailable(self, id: int):
         if self.gpu_num == 0:
             return False
         if id < 0:
+            return False
+        if self.forceTensor:
             return False
 
         try:
@@ -43,6 +66,10 @@ class DeviceManager(object):
                 return False
         except Exception as e:
             print(e)
+            return False
+
+        cap = torch.cuda.get_device_capability(id)
+        if cap[0] < 7:  # コンピューティング機能が7以上の場合half precisionが使えるとされている（が例外がある？T500とか）
             return False
 
         return True

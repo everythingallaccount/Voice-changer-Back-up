@@ -23,8 +23,8 @@ from restapi.MMVC_Rest import MMVC_Rest
 from const import (
     NATIVE_CLIENT_FILE_MAC,
     NATIVE_CLIENT_FILE_WIN,
-    SAMPLES_JSONS,
     SSL_KEY_DIR,
+    getRVCSampleJsonAndModelIds,
 )
 import subprocess
 import multiprocessing as mp
@@ -35,6 +35,12 @@ setup_loggers()
 
 def setupArgParser():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--logLevel",
+        type=str,
+        default="critical",
+        help="Log level info|critical. (default: critical)",
+    )
     parser.add_argument("-p", type=int, default=18888, help="port")
     parser.add_argument("--https", type=strtobool, default=False, help="use https")
     parser.add_argument(
@@ -51,6 +57,9 @@ def setupArgParser():
     )
 
     parser.add_argument("--model_dir", type=str, help="path to model files")
+    parser.add_argument(
+        "--rvc_sample_mode", type=str, default="production", help="rvc_sample_mode"
+    )
 
     parser.add_argument(
         "--content_vec_500", type=str, help="path to content_vec_500 model(pytorch)"
@@ -178,13 +187,13 @@ printMessage(f"Booting PHASE :{__name__}", level=2)
 PORT = args.p
 
 
-def localServer():
+def localServer(logLevel: str = "critical"):
     uvicorn.run(
         f"{os.path.basename(__file__)[:-3]}:app_socketio",
         host="0.0.0.0",
         port=int(PORT),
         reload=False if hasattr(sys, "_MEIPASS") else True,
-        log_level="warning",
+        log_level=logLevel,
     )
 
 
@@ -199,6 +208,7 @@ if __name__ == "MMVCServerSIO":
         hubert_base_jp=args.hubert_base_jp,
         hubert_soft=args.hubert_soft,
         nsf_hifigan=args.nsf_hifigan,
+        rvc_sample_mode=args.rvc_sample_mode,
     )
 
     if (
@@ -209,7 +219,7 @@ if __name__ == "MMVCServerSIO":
         printMessage("failed to download weight for rvc", level=2)
 
     voiceChangerManager = VoiceChangerManager.get_instance(voiceChangerParams)
-    app_fastapi = MMVC_Rest.get_instance(voiceChangerManager)
+    app_fastapi = MMVC_Rest.get_instance(voiceChangerManager, voiceChangerParams)
     app_socketio = MMVC_SocketIOApp.get_instance(app_fastapi, voiceChangerManager)
 
 
@@ -227,12 +237,13 @@ if __name__ == "__main__":
 
     try:
         sampleJsons = []
-        for url in SAMPLES_JSONS:
+        sampleJsonUrls, sampleModels = getRVCSampleJsonAndModelIds(args.rvc_sample_mode)
+        for url in sampleJsonUrls:
             filename = os.path.basename(url)
             download_no_tqdm({"url": url, "saveTo": filename, "position": 0})
             sampleJsons.append(filename)
         if checkRvcModelExist(args.model_dir) is False:
-            downloadInitialSampleModels(sampleJsons, args.model_dir)
+            downloadInitialSampleModels(sampleJsons, sampleModels, args.model_dir)
     except Exception as e:
         print("[Voice Changer] loading sample failed", e)
 
@@ -318,10 +329,10 @@ if __name__ == "__main__":
             reload=False if hasattr(sys, "_MEIPASS") else True,
             ssl_keyfile=key_path,
             ssl_certfile=cert_path,
-            # log_level="warning"
+            log_level=args.logLevel,
         )
     else:
-        p = mp.Process(name="p", target=localServer)
+        p = mp.Process(name="p", target=localServer, args=(args.logLevel,))
         p.start()
         try:
             if sys.platform.startswith("win"):

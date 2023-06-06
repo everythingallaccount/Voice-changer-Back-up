@@ -1,21 +1,19 @@
 from typing import Any, Protocol
-
 import torch
-from torch import device
+import onnxruntime
 
 from const import EnumInferenceTypes
-import onnxruntime
 
 
 class Inferencer(Protocol):
     inferencerType: EnumInferenceTypes = EnumInferenceTypes.pyTorchRVC
     file: str
     isHalf: bool = True
-    dev: device
+    gpu: int = 0
 
     model: onnxruntime.InferenceSession | Any | None = None
 
-    def loadModel(self, file: str, dev: device, isHalf: bool = True):
+    def loadModel(self, file: str, gpu: int):
         ...
 
     def infer(
@@ -32,23 +30,18 @@ class Inferencer(Protocol):
         self,
         inferencerType: EnumInferenceTypes,
         file: str,
-        dev: device,
-        isHalf: bool = True,
+        isHalf: bool,
+        gpu: int,
     ):
         self.inferencerType = inferencerType
         self.file = file
         self.isHalf = isHalf
-        self.dev = dev
+        self.gpu = gpu
 
-    def setHalf(self, isHalf: bool):
-        self.isHalf = isHalf
-        if self.model is not None and isHalf:
-            self.model = self.model.half()
-        elif self.model is not None and isHalf is False:
-            self.model = self.model.float()
-
-    def setDevice(self, dev: device):
-        self.dev = dev
-        if self.model is not None:
-            self.model = self.model.to(self.dev)
-        return self
+    def getInferencerInfo(self):
+        return {
+            "inferencerType": self.inferencerType.value,
+            "file": self.file,
+            "isHalf": self.isHalf,
+            "gpu": self.gpu,
+        }

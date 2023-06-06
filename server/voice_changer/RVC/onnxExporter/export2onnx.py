@@ -38,13 +38,13 @@ def export2onnx(gpu: int, modelSlot: ModelSlot):
     metadata = {
         "application": "VC_CLIENT",
         "version": "2",
-        # ↓EnumInferenceTypesのままだとシリアライズできないのでテキスト化
-        "modelType": modelSlot.modelType.value,
+        "modelType": modelSlot.modelType,
         "samplingRate": modelSlot.samplingRate,
         "f0": modelSlot.f0,
         "embChannels": modelSlot.embChannels,
-        # ↓EnumEmbedderTypesのままだとシリアライズできないのでテキスト化
-        "embedder": modelSlot.embedder.value,
+        "embedder": modelSlot.embedder,
+        "embOutputLayer": modelSlot.embOutputLayer,
+        "useFinalProj": modelSlot.useFinalProj,
     }
     gpuMomory = DeviceManager.get_instance().getDeviceMemory(gpu)
     print(f"[Voice Changer] exporting onnx... gpu_id:{gpu} gpu_mem:{gpuMomory}")

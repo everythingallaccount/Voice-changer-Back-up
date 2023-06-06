@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from ModelSample import RVCModelSample
+from const import RVC_MAX_SLOT_NUM
 
 from voice_changer.RVC.ModelSlot import ModelSlot
 
@@ -17,18 +18,13 @@ class RVCSettings:
 
     framework: str = "PyTorch"  # PyTorch or ONNX
     modelSlots: list[ModelSlot] = field(
-        default_factory=lambda: [
-            ModelSlot(),  # 1
-            ModelSlot(),  # 2
-            ModelSlot(),  # 3
-            ModelSlot(),  # 4
-            ModelSlot(),  # 5
-            ModelSlot(),  # 6(merged)
-        ]
+        default_factory=lambda: [ModelSlot() for _x in range(RVC_MAX_SLOT_NUM)]
     )
+
     sampleModels: list[RVCModelSample] = field(default_factory=lambda: [])
 
     indexRatio: float = 0
+    protect: float = 0.5
     rvcQuality: int = 0
     silenceFront: int = 1  # 0:off, 1:on
     modelSamplingRate: int = 48000
@@ -50,5 +46,5 @@ class RVCSettings:
         "isHalf",
         "enableDirectML",
     ]
-    floatData = ["silentThreshold", "indexRatio"]
+    floatData = ["silentThreshold", "indexRatio", "protect"]
     strData = ["framework", "f0Detector"]

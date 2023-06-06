@@ -107,6 +107,8 @@ export const ServerSettingKey = {
     "serverInputDeviceId": "serverInputDeviceId",
     "serverOutputDeviceId": "serverOutputDeviceId",
     "serverReadChunkSize": "serverReadChunkSize",
+    "serverInputAudioGain": "serverInputAudioGain",
+    "serverOutputAudioGain": "serverOutputAudioGain",
 
     "tran": "tran",
     "noiseScale": "noiseScale",
@@ -116,6 +118,7 @@ export const ServerSettingKey = {
     "clusterInferRatio": "clusterInferRatio",
 
     "indexRatio": "indexRatio",
+    "protect": "protect",
     "rvcQuality": "rvcQuality",
     "modelSamplingRate": "modelSamplingRate",
     "silenceFront": "silenceFront",
@@ -162,6 +165,8 @@ export type VoiceChangerServerSetting = {
     serverInputDeviceId: number
     serverOutputDeviceId: number
     serverReadChunkSize: number
+    serverInputAudioGain: number
+    serverOutputAudioGain: number
 
 
     tran: number // so-vits-svc
@@ -172,6 +177,7 @@ export type VoiceChangerServerSetting = {
     clusterInferRatio: number // so-vits-svc
 
     indexRatio: number // RVC
+    protect: number // RVC
     rvcQuality: number // 0:low, 1:high
     silenceFront: number // 0:off, 1:on
     modelSamplingRate: ModelSamplingRate // 32000,40000,48000
@@ -198,6 +204,7 @@ type ModelSlot = {
 
     defaultTune: number,
     defaultIndexRatio: number,
+    defaultProtect: number,
 
     modelType: ModelType,
     embChannels: number,
@@ -268,6 +275,8 @@ export const DefaultServerSetting: ServerInfo = {
     serverInputDeviceId: -1,
     serverOutputDeviceId: -1,
     serverReadChunkSize: 256,
+    serverInputAudioGain: 1.0,
+    serverOutputAudioGain: 1.0,
 
     // VC Specific
     srcId: 0,
@@ -288,6 +297,7 @@ export const DefaultServerSetting: ServerInfo = {
     clusterInferRatio: 0,
 
     indexRatio: 0,
+    protect: 0.5,
     rvcQuality: 0,
     modelSamplingRate: 48000,
     silenceFront: 1,
@@ -322,23 +332,23 @@ export const DefaultServerSetting_MMVCv13: ServerInfo = {
 }
 
 export const DefaultServerSetting_so_vits_svc_40: ServerInfo = {
-    ...DefaultServerSetting, tran: 10, noiseScale: 0.3, extraConvertSize: 1024 * 32, clusterInferRatio: 0.1,
+    ...DefaultServerSetting, tran: 10, noiseScale: 0.3, extraConvertSize: 1024 * 8, clusterInferRatio: 0.1,
 }
 
 export const DefaultServerSetting_so_vits_svc_40_c: ServerInfo = {
-    ...DefaultServerSetting, tran: 10, noiseScale: 0.3, extraConvertSize: 1024 * 32, clusterInferRatio: 0.1,
+    ...DefaultServerSetting, tran: 10, noiseScale: 0.3, extraConvertSize: 1024 * 8, clusterInferRatio: 0.1,
 }
 export const DefaultServerSetting_so_vits_svc_40v2: ServerInfo = {
-    ...DefaultServerSetting, tran: 10, noiseScale: 0.3, extraConvertSize: 1024 * 32, clusterInferRatio: 0.1,
+    ...DefaultServerSetting, tran: 10, noiseScale: 0.3, extraConvertSize: 1024 * 8, clusterInferRatio: 0.1,
 }
 
 export const DefaultServerSetting_DDSP_SVC: ServerInfo = {
-    ...DefaultServerSetting, dstId: 1, tran: 10, extraConvertSize: 1024 * 32
+    ...DefaultServerSetting, dstId: 1, tran: 10, extraConvertSize: 1024 * 8
 }
 
 
 export const DefaultServerSetting_RVC: ServerInfo = {
-    ...DefaultServerSetting, tran: 10, extraConvertSize: 1024 * 32, f0Detector: F0Detector.harvest
+    ...DefaultServerSetting, tran: 10, extraConvertSize: 1024 * 4, f0Detector: F0Detector.harvest
 }
 
 ///////////////////////
@@ -517,5 +527,6 @@ export type MergeModelRequest = {
     command: "mix",
     defaultTune: number,
     defaultIndexRatio: number,
+    defaultProtect: number,
     files: MergeElement[]
 }

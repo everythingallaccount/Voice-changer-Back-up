@@ -76,7 +76,7 @@ class SoVitsSvc40v2:
         self.gpu_num = torch.cuda.device_count()
         self.prevVol = 0
         self.params = params
-        print("so-vits-svc 40v2 initialization:", params)
+        print("[Voice Changer] so-vits-svc 40v2 initialization:", params)
 
     def loadModel(self, props: LoadModelParams):
         params = props.params
@@ -139,10 +139,11 @@ class SoVitsSvc40v2:
         return self.get_info()
 
     def getOnnxExecutionProvider(self):
-        if self.settings.gpu >= 0:
+        availableProviders = onnxruntime.get_available_providers()
+        if self.settings.gpu >= 0 and "CUDAExecutionProvider" in availableProviders:
             return ["CUDAExecutionProvider"], [{"device_id": self.settings.gpu}]
-        elif "DmlExecutionProvider" in onnxruntime.get_available_providers():
-            return ["DmlExecutionProvider"], []
+        elif self.settings.gpu >= 0 and "DmlExecutionProvider" in availableProviders:
+            return ["DmlExecutionProvider"], [{}]
         else:
             return ["CPUExecutionProvider"], [
                 {
@@ -416,7 +417,7 @@ class SoVitsSvc40v2:
             try:
                 file_path = val.__file__
                 if file_path.find("so-vits-svc-40v2" + os.path.sep) >= 0:
-                    print("remove", key, file_path)
+                    # print("remove", key, file_path)
                     sys.modules.pop(key)
             except:  # type:ignore
                 pass

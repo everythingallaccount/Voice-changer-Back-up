@@ -42,10 +42,17 @@ docker/cudnn/
 
 server/pretrain/
 server/weights/
+server/model_dir/
 server/weights_/
 server/weights__/
 server/models/
 server/samples.json
+server/samples_0003_t.json
+server/samples_0003_o.json
+
+server/test_official_v1_v2.json
+server/test_ddpn_v1_v2.json
+
 start_trainer.sh
 
 # venv

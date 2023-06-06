@@ -78,7 +78,7 @@ export const ServerOpertationRow = (props: ServerOpertationRowProps) => {
                 </div>
             </>
         )
-    }, [appState.getInfo, appState.serverSetting.serverSetting])
+    }, [appState.getInfo, appState.serverSetting.serverSetting, guiState.isConverting])
 
     return serverOpertationRow
 }

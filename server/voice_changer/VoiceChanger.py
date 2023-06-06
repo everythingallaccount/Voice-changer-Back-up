@@ -17,24 +17,19 @@ from voice_changer.utils.LoadModelParams import LoadModelParams
 from voice_changer.utils.Timer import Timer
 from voice_changer.utils.VoiceChangerModel import VoiceChangerModel, AudioInOut
 from Exceptions import (
+    DeviceCannotSupportHalfPrecisionException,
     DeviceChangingException,
     HalfPrecisionChangingException,
     NoModeLoadedException,
     NotEnoughDataExtimateF0,
     ONNXInputArgumentException,
+    VoiceChangerIsNotSelectedException,
 )
 from voice_changer.utils.VoiceChangerParams import VoiceChangerParams
 import threading
 import time
 import sounddevice as sd
 import librosa
-
-providers = [
-    "OpenVINOExecutionProvider",
-    "CUDAExecutionProvider",
-    "DmlExecutionProvider",
-    "CPUExecutionProvider",
-]
 
 STREAM_INPUT_FILE = os.path.join(TMP_DIR, "in.wav")
 STREAM_OUTPUT_FILE = os.path.join(TMP_DIR, "out.wav")
@@ -60,11 +55,13 @@ class VoiceChangerSettings:
     # serverOutputAudioSampleRate: int = 48000
     serverInputAudioSampleRate: int = 44100
     serverOutputAudioSampleRate: int = 44100
-    serverInputAudioBufferSize: int = 1024 * 24
-    serverOutputAudioBufferSize: int = 1024 * 24
+    # serverInputAudioBufferSize: int = 1024 * 24
+    # serverOutputAudioBufferSize: int = 1024 * 24
     serverInputDeviceId: int = -1
     serverOutputDeviceId: int = -1
     serverReadChunkSize: int = 256
+    serverInputAudioGain: float = 1.0
+    serverOutputAudioGain: float = 1.0
     performance: list[int] = field(default_factory=lambda: [0, 0, 0, 0])
 
     # ↓mutableな物だけ列挙
@@ -77,32 +74,40 @@ class VoiceChangerSettings:
             "serverAudioStated",
             "serverInputAudioSampleRate",
             "serverOutputAudioSampleRate",
-            "serverInputAudioBufferSize",
-            "serverOutputAudioBufferSize",
+            # "serverInputAudioBufferSize",
+            # "serverOutputAudioBufferSize",
             "serverInputDeviceId",
             "serverOutputDeviceId",
             "serverReadChunkSize",
         ]
     )
     floatData: list[str] = field(
-        default_factory=lambda: ["crossFadeOffsetRate", "crossFadeEndRate"]
+        default_factory=lambda: [
+            "crossFadeOffsetRate",
+            "crossFadeEndRate",
+            "serverInputAudioGain",
+            "serverOutputAudioGain",
+        ]
     )
     strData: list[str] = field(default_factory=lambda: [])
 
 
 class VoiceChanger:
-    settings: VoiceChangerSettings
-    voiceChanger: VoiceChangerModel
+    settings: VoiceChangerSettings = VoiceChangerSettings()
+    voiceChanger: VoiceChangerModel | None = None
     ioRecorder: IORecorder
     sola_buffer: AudioInOut
     namespace: socketio.AsyncNamespace | None = None
 
     localPerformanceShowTime = 0.0
 
+    emitTo = None
+
     def audio_callback(
         self, indata: np.ndarray, outdata: np.ndarray, frames, times, status
     ):
         try:
+            indata = indata * self.settings.serverInputAudioGain
             with Timer("all_inference_time") as t:
                 unpackedData = librosa.to_mono(indata.T) * 32768.0
                 out_wav, times = self.on_request(unpackedData)
@@ -111,8 +116,11 @@ class VoiceChanger:
                     np.repeat(out_wav, outputChunnels).reshape(-1, outputChunnels)
                     / 32768.0
                 )
+                outdata[:] = outdata * self.settings.serverOutputAudioGain
             all_inference_time = t.secs
             performance = [all_inference_time] + times
+            if self.emitTo is not None:
+                self.emitTo(performance)
             self.settings.performance = [round(x * 1000) for x in performance]
         except Exception as e:
             print("[Voice Changer] ex:", e)
@@ -130,13 +138,14 @@ class VoiceChanger:
         vc: VoiceChanger = _vc
 
         currentInputDeviceId = -1
-        currentInputSampleRate = -1
+        currentModelSamplingRate = -1
         currentOutputDeviceId = -1
         currentInputChunkNum = -1
         while True:
             if (
                 vc.settings.serverAudioStated == 0
                 or vc.settings.serverInputDeviceId == -1
+                or vc.voiceChanger is None
             ):
                 vc.settings.inputSampleRate = 48000
                 time.sleep(2)
@@ -166,37 +175,59 @@ class VoiceChanger:
                 currentInputChannelNum = serverInputAudioDevice.maxInputChannels
                 currentOutputChannelNum = serverOutputAudioDevice.maxOutputChannels
 
-                vc.settings.serverInputAudioSampleRate = (
-                    self.voiceChanger.get_processing_sampling_rate()
-                )
-                currentInputSampleRate = vc.settings.serverInputAudioSampleRate
                 currentInputChunkNum = vc.settings.serverReadChunkSize
                 block_frame = currentInputChunkNum * 128
 
+                # sample rate precheck(alsa cannot use 40000?)
+                try:
+                    currentModelSamplingRate = (
+                        self.voiceChanger.get_processing_sampling_rate()
+                    )
+                except Exception as e:
+                    print("[Voice Changer] ex: get_processing_sampling_rate", e)
+                    continue
                 try:
                     with sd.Stream(
                         callback=self.audio_callback,
                         blocksize=block_frame,
-                        samplerate=currentInputSampleRate,
+                        samplerate=currentModelSamplingRate,
                         dtype="float32",
                         channels=[currentInputChannelNum, currentOutputChannelNum],
                     ):
-                        print()
+                        pass
+                    vc.settings.serverInputAudioSampleRate = currentModelSamplingRate
+                    vc.settings.inputSampleRate = currentModelSamplingRate
+                    print(
+                        f"[Voice Changer] sample rate {vc.settings.serverInputAudioSampleRate}"
+                    )
+                except Exception as e:
+                    print(
+                        "[Voice Changer] ex: fallback to device default samplerate",
+                        e,
+                    )
+                    vc.settings.serverInputAudioSampleRate = (
+                        serverInputAudioDevice.default_samplerate
+                    )
+                    vc.settings.inputSampleRate = vc.settings.serverInputAudioSampleRate
+
+                # main loop
+                try:
+                    with sd.Stream(
+                        callback=self.audio_callback,
+                        blocksize=block_frame,
+                        samplerate=vc.settings.serverInputAudioSampleRate,
+                        dtype="float32",
+                        channels=[currentInputChannelNum, currentOutputChannelNum],
+                    ):
                         while (
                             vc.settings.serverAudioStated == 1
                             and currentInputDeviceId == vc.settings.serverInputDeviceId
                             and currentOutputDeviceId
                             == vc.settings.serverOutputDeviceId
-                            and currentInputSampleRate
-                            == vc.settings.serverInputAudioSampleRate
+                            and currentModelSamplingRate
+                            == self.voiceChanger.get_processing_sampling_rate()
                             and currentInputChunkNum == vc.settings.serverReadChunkSize
                         ):
-                            vc.settings.serverInputAudioSampleRate = (
-                                self.voiceChanger.get_processing_sampling_rate()
-                            )
-                            vc.settings.inputSampleRate = (
-                                vc.settings.serverInputAudioSampleRate
-                            )
                             time.sleep(2)
                             print(
                                 "[Voice Changer] server audio",
@@ -207,7 +238,7 @@ class VoiceChanger:
                                 vc.settings.serverAudioStated,
                                 currentInputDeviceId,
                                 currentOutputDeviceId,
-                                currentInputSampleRate,
+                                vc.settings.serverInputAudioSampleRate,
                                 currentInputChunkNum,
                             )
 
@@ -246,7 +277,7 @@ class VoiceChanger:
 
     def switchModelType(self, modelType: ModelType):
         try:
-            if hasattr(self, "voiceChanger") and self.voiceChanger is not None:
+            if self.voiceChanger is not None:
                 # return {"status": "ERROR", "msg": "vc is already selected. currently re-select is not implemented"}
                 del self.voiceChanger
                 self.voiceChanger = None
@@ -296,6 +327,10 @@ class VoiceChanger:
 
     def loadModel(self, props: LoadModelParams):
         try:
+            if self.voiceChanger is None:
+                raise VoiceChangerIsNotSelectedException(
+                    "Voice Changer is not selected."
+                )
             return self.voiceChanger.loadModel(props)
         except Exception as e:
             print(traceback.format_exc())
@@ -304,7 +339,7 @@ class VoiceChanger:
 
     def get_info(self):
         data = asdict(self.settings)
-        if hasattr(self, "voiceChanger"):
+        if self.voiceChanger is not None:
             data.update(self.voiceChanger.get_info())
         return data
 
@@ -312,6 +347,10 @@ class VoiceChanger:
         return self.settings.performance
 
     def update_settings(self, key: str, val: Any):
+        if self.voiceChanger is None:
+            print("[Voice Changer] Voice Changer is not selected.")
+            return self.get_info()
+
         if key in self.settings.intData:
             setattr(self.settings, key, int(val))
             if key == "crossFadeOffsetRate" or key == "crossFadeEndRate":
@@ -335,12 +374,10 @@ class VoiceChanger:
         elif key in self.settings.strData:
             setattr(self.settings, key, str(val))
         else:
-            if hasattr(self, "voiceChanger"):
-                ret = self.voiceChanger.update_settings(key, val)
-                if ret is False:
-                    print(f"{key} is not mutable variable or unknown variable!")
-            else:
-                print("voice changer is not initialized!")
+            ret = self.voiceChanger.update_settings(key, val)
+            if ret is False:
+                pass
+                # print(f"({key} is not mutable variable or unknown variable)")
         return self.get_info()
 
     def _generate_strength(self, crossfadeSize: int):
@@ -398,8 +435,12 @@ class VoiceChanger:
         self, receivedData: AudioInOut
     ) -> tuple[AudioInOut, list[Union[int, float]]]:
         try:
-            processing_sampling_rate = self.voiceChanger.get_processing_sampling_rate()
+            if self.voiceChanger is None:
+                raise VoiceChangerIsNotSelectedException(
+                    "Voice Changer is not selected."
+                )
 
+            processing_sampling_rate = self.voiceChanger.get_processing_sampling_rate()
             # 前処理
             with Timer("pre-process") as t:
                 if self.settings.inputSampleRate != processing_sampling_rate:
@@ -436,8 +477,7 @@ class VoiceChanger:
                         sola_search_frame + crossfade_frame + block_frame
                     )
                     audio = audio[audio_offset:]
-                    a = 0
-                    audio = audio[a:]
+
                     # SOLA algorithm from https://github.com/yxlllc/DDSP-SVC, https://github.com/liujing04/Retrieval-based-Voice-Conversion-WebUI
                     cor_nom = np.convolve(
                         audio[: crossfade_frame + sola_search_frame],
@@ -460,7 +500,7 @@ class VoiceChanger:
 
                     result = output_wav
                 else:
-                    print("[Voice Changer] no sola buffer. (You can ignore this.)")
+                    print("[Voice Changer] warming up... generating sola buffer.")
                     result = np.zeros(4096).astype(np.int16)
 
                 if (
@@ -525,19 +565,27 @@ class VoiceChanger:
             print("[Voice Changer] [Exception]", e)
             return np.zeros(1).astype(np.int16), [0, 0, 0]
         except ONNXInputArgumentException as e:
-            print("[Voice Changer] [Exception]", e)
+            print("[Voice Changer] [Exception] onnx are waiting valid input.", e)
             return np.zeros(1).astype(np.int16), [0, 0, 0]
-        except HalfPrecisionChangingException as e:
-            print("[Voice Changer] Switching model configuration....", e)
+        except HalfPrecisionChangingException:
+            print("[Voice Changer] Switching model configuration....")
             return np.zeros(1).astype(np.int16), [0, 0, 0]
-        except NotEnoughDataExtimateF0 as e:
-            print("[Voice Changer] not enough data", e)
+        except NotEnoughDataExtimateF0:
+            print("[Voice Changer] warming up... waiting more data.")
             return np.zeros(1).astype(np.int16), [0, 0, 0]
         except DeviceChangingException as e:
             print("[Voice Changer] embedder:", e)
             return np.zeros(1).astype(np.int16), [0, 0, 0]
+        except VoiceChangerIsNotSelectedException:
+            print(
+                "[Voice Changer] Voice Changer is not selected. Wait a bit and if there is no improvement, please re-select vc."
+            )
+            return np.zeros(1).astype(np.int16), [0, 0, 0]
+        except DeviceCannotSupportHalfPrecisionException:
+            # RVC.pyでfallback処理をするので、ここはダミーデータ返すだけ。
+            return np.zeros(1).astype(np.int16), [0, 0, 0]
         except Exception as e:
-            print("VC PROCESSING!!!! EXCEPTION!!!", e)
+            print("[Voice Changer] VC PROCESSING EXCEPTION!!!", e)
             print(traceback.format_exc())
             return np.zeros(1).astype(np.int16), [0, 0, 0]
 
@@ -547,10 +595,16 @@ class VoiceChanger:
         ##############
 
     def merge_models(self, request: str):
+        if self.voiceChanger is None:
+            print("[Voice Changer] Voice Changer is not selected.")
+            return
         self.voiceChanger.merge_models(request)
         return self.get_info()
 
     def update_model_default(self):
+        if self.voiceChanger is None:
+            print("[Voice Changer] Voice Changer is not selected.")
+            return
         self.voiceChanger.update_model_default()
         return self.get_info()
 

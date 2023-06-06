@@ -102,10 +102,11 @@ class MMVCv13:
         return self.get_info()
 
     def getOnnxExecutionProvider(self):
-        if self.settings.gpu >= 0:
+        availableProviders = onnxruntime.get_available_providers()
+        if self.settings.gpu >= 0 and "CUDAExecutionProvider" in availableProviders:
             return ["CUDAExecutionProvider"], [{"device_id": self.settings.gpu}]
-        elif "DmlExecutionProvider" in onnxruntime.get_available_providers():
-            return ["DmlExecutionProvider"], []
+        elif self.settings.gpu >= 0 and "DmlExecutionProvider" in availableProviders:
+            return ["DmlExecutionProvider"], [{}]
         else:
             return ["CPUExecutionProvider"], [
                 {
@@ -200,8 +201,8 @@ class MMVCv13:
 
         convertSize = inputSize + crossfadeSize + solaSearchFrame
 
-        if convertSize < 8192:
-            convertSize = 8192
+        # if convertSize < 8192:
+        #     convertSize = 8192
         if convertSize % self.hps.data.hop_length != 0:  # モデルの出力のホップサイズで切り捨てが発生するので補う。
             convertSize = convertSize + (
                 self.hps.data.hop_length - (convertSize % self.hps.data.hop_length)
@@ -288,7 +289,7 @@ class MMVCv13:
             try:
                 file_path = val.__file__
                 if file_path.find(remove_path + os.path.sep) >= 0:
-                    print("remove", key, file_path)
+                    # print("remove", key, file_path)
                     sys.modules.pop(key)
             except:  # type:ignore
                 pass

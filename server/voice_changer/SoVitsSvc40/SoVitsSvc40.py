@@ -80,7 +80,7 @@ class SoVitsSvc40:
         self.gpu_num = torch.cuda.device_count()
         self.prevVol = 0
         self.params = params
-        print("so-vits-svc40 initialization:", params)
+        print("[Voice Changer] so-vits-svc40 initialization:", params)
 
     # def loadModel(self, config: str, pyTorch_model_file: str = None, onnx_model_file: str = None, clusterTorchModel: str = None):
     def loadModel(self, props: LoadModelParams):
@@ -97,7 +97,11 @@ class SoVitsSvc40:
             self.settings.pyTorchModelFile = modelFile
             self.settings.onnxModelFile = None
 
-        clusterTorchModel = params["files"]["soVitsSvc40Cluster"]
+        clusterTorchModel = (
+            params["files"]["soVitsSvc40Cluster"]
+            if "soVitsSvc40Cluster" in params["files"]
+            else None
+        )
 
         content_vec_path = self.params.content_vec_500
         content_vec_onnx_path = self.params.content_vec_500_onnx
@@ -158,10 +162,11 @@ class SoVitsSvc40:
         return self.get_info()
 
     def getOnnxExecutionProvider(self):
-        if self.settings.gpu >= 0:
+        availableProviders = onnxruntime.get_available_providers()
+        if self.settings.gpu >= 0 and "CUDAExecutionProvider" in availableProviders:
             return ["CUDAExecutionProvider"], [{"device_id": self.settings.gpu}]
-        elif "DmlExecutionProvider" in onnxruntime.get_available_providers():
-            return ["DmlExecutionProvider"], []
+        elif self.settings.gpu >= 0 and "DmlExecutionProvider" in availableProviders:
+            return ["DmlExecutionProvider"], [{}]
         else:
             return ["CPUExecutionProvider"], [
                 {
@@ -463,7 +468,7 @@ class SoVitsSvc40:
             try:
                 file_path = val.__file__
                 if file_path.find("so-vits-svc-40" + os.path.sep) >= 0:
-                    print("remove", key, file_path)
+                    # print("remove", key, file_path)
                     sys.modules.pop(key)
             except Exception:  # type:ignore
                 pass

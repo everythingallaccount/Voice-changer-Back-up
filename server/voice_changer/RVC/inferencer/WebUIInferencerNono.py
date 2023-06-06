@@ -1,14 +1,18 @@
 import torch
-from torch import device
-
 from const import EnumInferenceTypes
+
+from voice_changer.RVC.deviceManager.DeviceManager import DeviceManager
 from voice_changer.RVC.inferencer.Inferencer import Inferencer
 from .models import SynthesizerTrnMsNSFsidNono
 
 
 class WebUIInferencerNono(Inferencer):
-    def loadModel(self, file: str, dev: device, isHalf: bool = True):
-        super().setProps(EnumInferenceTypes.pyTorchWebUINono, file, dev, isHalf)
+    def loadModel(self, file: str, gpu: int):
+        self.setProps(EnumInferenceTypes.pyTorchWebUINono, file, True, gpu)
+
+        dev = DeviceManager.get_instance().getDevice(gpu)
+        isHalf = DeviceManager.get_instance().halfPrecisionAvailable(gpu)
+
         cpt = torch.load(file, map_location="cpu")
         model = SynthesizerTrnMsNSFsidNono(**cpt["params"], is_half=isHalf)
 

@@ -32,7 +32,6 @@ import { CrossFadeOffsetRateRow, CrossFadeOffsetRateRowProps } from "./component
 import { CrossFadeEndRateRow, CrossFadeEndRateRowProps } from "./components/807_CrossFadeEndRateRow"
 import { DownSamplingModeRow, DownSamplingModeRowProps } from "./components/808_DownSamplingModeRow"
 import { TrancateNumTresholdRow, TrancateNumTresholdRowProps } from "./components/809_TrancateNumTresholdRow"
-import { IndexRatioRow, IndexRatioRowProps } from "./components/609_IndexRatioRow"
 import { RVCQualityRow, RVCQualityRowProps } from "./components/810_RVCQualityRow"
 import { ModelSamplingRateRow, ModelSamplingRateRowProps } from "./components/303_ModelSamplingRateRow"
 import { DstIdRow2, DstIdRow2Props } from "./components/602v2_DstIdRow2"
@@ -55,6 +54,9 @@ import { DiffSettingRow, DiffSettingRowProps } from "./components/612_DiffSettin
 import { DiffMethodRow, DiffMethodRowProps } from "./components/613_DiffMethodRow"
 import { ServerOpertationRow, ServerOpertationRowProps } from "./components/207_ServerOpertationRow"
 import { SampleModelSelectRow, SampleModelSelectRowProps } from "./components/301-j_SampleModelSelectRow"
+import { SampleDownloadControlRow, SampleDownloadControlRowProps } from "./components/301-k_SampleDownloadControl"
+import { IndexRatioRow, IndexRatioRowProps } from "./components/609_IndexRatioRow copy"
+import { ProtectRow, ProtectRowProps } from "./components/610_ProtectRow"
 
 export const catalog: { [key: string]: (props: any) => JSX.Element } = {}
 
@@ -94,6 +96,7 @@ const initialize = () => {
     addToCatalog("modelSlotRow2", (props: ModelSlotRow2Props) => { return <ModelSlotRow2  {...props} /> })
     addToCatalog("defaultTuneRow2", (props: DefaultTuneRow2Props) => { return <DefaultTuneRow2  {...props} /> })
     addToCatalog("sampleModelSelect", (props: SampleModelSelectRowProps) => { return <SampleModelSelectRow  {...props} /> })
+    addToCatalog("sampleDownloadControlRow", (props: SampleDownloadControlRowProps) => { return <SampleDownloadControlRow  {...props} /> })
 
 
 
@@ -120,6 +123,7 @@ const initialize = () => {
     addToCatalog("noiseScale", (props: NoiseScaleRowProps) => { return <NoiseScaleRow {...props} /> })
     addToCatalog("silentThreshold", (props: SilentThresholdRowProps) => { return <SilentThresholdRow {...props} /> })
     addToCatalog("indexRatio", (props: IndexRatioRowProps) => { return <IndexRatioRow {...props} /> })
+    addToCatalog("protect", (props: ProtectRowProps) => { return <ProtectRow {...props} /> })
     addToCatalog("diffEnabler", (props: DiffEnablerRowProps) => { return <DiffEnablerRow {...props} /> })
     addToCatalog("diffSetting", (props: DiffSettingRowProps) => { return <DiffSettingRow {...props} /> })
     addToCatalog("diffMethod", (props: DiffMethodRowProps) => { return <DiffMethodRow {...props} /> })

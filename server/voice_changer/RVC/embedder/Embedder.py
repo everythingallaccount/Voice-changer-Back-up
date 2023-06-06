@@ -17,8 +17,19 @@ class Embedder(Protocol):
     def loadModel(self, file: str, dev: device, isHalf: bool = True):
         ...
 
-    def extractFeatures(self, feats: torch.Tensor, embChannels=256) -> torch.Tensor:
+    def extractFeatures(
+        self, feats: torch.Tensor, embOutputLayer=9, useFinalProj=True
+    ) -> torch.Tensor:
         ...
+
+    def getEmbedderInfo(self):
+        return {
+            "embedderType": self.embedderType.value,
+            "file": self.file,
+            "isHalf": self.isHalf,
+            "devType": self.dev.type,
+            "devIndex": self.dev.index,
+        }
 
     def setProps(
         self,

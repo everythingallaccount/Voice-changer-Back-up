@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 
 from const import ModelType
@@ -8,11 +8,10 @@ from const import ModelType
 class RVCModelSample:
     id: str = ""
     lang: str = ""
-    tag: str = ""
+    tag: list[str] = field(default_factory=lambda: [])
     name: str = ""
     modelUrl: str = ""
     indexUrl: str = ""
-    featureUrl: str = ""
     termsOfUseUrl: str = ""
     credit: str = ""
     description: str = ""

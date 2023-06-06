@@ -1,30 +1,14 @@
 import torch
-from torch import device
-import onnxruntime
-from const import EnumInferenceTypes
 import numpy as np
+from const import EnumInferenceTypes
 
 from voice_changer.RVC.inferencer.OnnxRVCInferencer import OnnxRVCInferencer
 
-providers = ["CPUExecutionProvider"]
-
 
 class OnnxRVCInferencerNono(OnnxRVCInferencer):
-    def loadModel(self, file: str, dev: device, isHalf: bool = True):
-        super().setProps(EnumInferenceTypes.onnxRVC, file, dev, isHalf)
-        # ort_options = onnxruntime.SessionOptions()
-        # ort_options.intra_op_num_threads = 8
-
-        onnx_session = onnxruntime.InferenceSession(file, providers=providers)
-
-        # check half-precision
-        first_input_type = onnx_session.get_inputs()[0].type
-        if first_input_type == "tensor(float)":
-            self.isHalf = False
-        else:
-            self.isHalf = True
-
-        self.model = onnx_session
+    def loadModel(self, file: str, gpu: int):
+        super().loadModel(file, gpu)
+        self.setProps(EnumInferenceTypes.onnxRVCNono, file, self.isHalf, gpu)
         return self
 
     def infer(

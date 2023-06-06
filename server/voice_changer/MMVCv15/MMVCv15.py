@@ -103,12 +103,14 @@ class MMVCv15:
             requires_grad_dec=self.hps.requires_grad.dec,
         )
         if self.settings.pyTorchModelFile is not None:
+            self.settings.framework = "PyTorch"
             self.net_g.eval()
             load_checkpoint(self.settings.pyTorchModelFile, self.net_g, None)
 
         # ONNXモデル生成
         self.onxx_input_length = 8192
         if self.settings.onnxModelFile is not None:
+            self.settings.framework = "ONNX"
             providers, options = self.getOnnxExecutionProvider()
             self.onnx_session = onnxruntime.InferenceSession(
                 self.settings.onnxModelFile,
@@ -123,10 +125,11 @@ class MMVCv15:
         return self.get_info()
 
     def getOnnxExecutionProvider(self):
-        if self.settings.gpu >= 0:
+        availableProviders = onnxruntime.get_available_providers()
+        if self.settings.gpu >= 0 and "CUDAExecutionProvider" in availableProviders:
             return ["CUDAExecutionProvider"], [{"device_id": self.settings.gpu}]
-        elif "DmlExecutionProvider" in onnxruntime.get_available_providers():
-            return ["DmlExecutionProvider"], []
+        elif self.settings.gpu >= 0 and "DmlExecutionProvider" in availableProviders:
+            return ["DmlExecutionProvider"], [{}]
         else:
             return ["CPUExecutionProvider"], [
                 {
@@ -242,8 +245,8 @@ class MMVCv15:
 
         convertSize = inputSize + crossfadeSize + solaSearchFrame
 
-        if convertSize < 8192:
-            convertSize = 8192
+        # if convertSize < 8192:
+        #     convertSize = 8192
         if convertSize % self.hps.data.hop_length != 0:  # モデルの出力のホップサイズで切り捨てが発生するので補う。
             convertSize = convertSize + (
                 self.hps.data.hop_length - (convertSize % self.hps.data.hop_length)
@@ -329,8 +332,8 @@ class MMVCv15:
             else:
                 audio = self._pyTorch_inference(data)
             return audio
-        except onnxruntime.capi.onnxruntime_pybind11_state.InvalidArgument as e:
-            print(e)
+        except onnxruntime.capi.onnxruntime_pybind11_state.InvalidArgument as _e:
+            print(_e)
             raise ONNXInputArgumentException()
 
     def __del__(self):
@@ -345,7 +348,7 @@ class MMVCv15:
             try:
                 file_path = val.__file__
                 if file_path.find(remove_path + os.path.sep) >= 0:
-                    print("remove", key, file_path)
+                    # print("remove", key, file_path)
                     sys.modules.pop(key)
             except:  # type:ignore
                 pass
