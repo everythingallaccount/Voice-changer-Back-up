@@ -8,7 +8,7 @@ export const ServerControl = () => {
     const guiState = useGuiState()
     const { appGuiSettingState } = useAppRoot()
     const componentSettings = appGuiSettingState.appGuiSetting.front.serverControl
-
+    console.log("ServerControllllllllll", componentSettings)
     const accodionButton = useMemo(() => {
         const accodionButtonProps: HeaderButtonProps = {
             stateControlCheckbox: guiState.stateControls.openServerControlCheckbox,
@@ -29,15 +29,20 @@ export const ServerControl = () => {
         })
         return (
             <>
+
+
                 <div>bbbbbbbbb5</div>
+
                 {guiState.stateControls.openServerControlCheckbox.trigger}
+
+
                 <div className="partition">
                     <div className="partition-header">
                         <span className="caret">
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openServerControlCheckbox.updateState(!guiState.stateControls.openServerControlCheckbox.checked()) }}>
-                            Server Control
+                            Server Controlllllllllllll
                         </span>
                     </div>
 

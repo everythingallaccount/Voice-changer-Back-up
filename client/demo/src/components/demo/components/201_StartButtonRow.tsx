@@ -22,7 +22,11 @@ export const StartButtonRow = (_props: StartButtonRowProps) => {
 
     const startButtonRow = useMemo(() => {
         const onStartClicked = async () => {
+
+
             if (appState.serverSetting.serverSetting.enableServerAudio == 0) {
+
+
                 if (!appState.initializedRef.current) {
                     while (true) {
                         // console.log("wait 500ms")
@@ -40,7 +44,12 @@ export const StartButtonRow = (_props: StartButtonRowProps) => {
                     await appState.clientSetting.start()
                 }
             } else {
+
+
                 appState.serverSetting.updateServerSettings({ ...appState.serverSetting.serverSetting, serverAudioStated: 1 })
+
+
+
                 guiState.setIsConverting(true)
             }
         }
