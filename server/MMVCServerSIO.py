@@ -1,3 +1,23 @@
+def printMessage(message, level=0):
+    pf = platform.system()
+    if pf == "Windows":
+        if level == 0:
+            print(f"{message}")
+        elif level == 1:
+            print(f"    {message}")
+        elif level == 2:
+            print(f"    {message}")
+        else:
+            print(f"    {message}")
+    else:
+        if level == 0:
+            print(f"\033[17m{message}\033[0m")
+        elif level == 1:
+            print(f"\033[34m    {message}\033[0m")
+        elif level == 2:
+            print(f"\033[32m    {message}\033[0m")
+        else:
+            print(f"\033[47m    {message}\033[0m")
 from concurrent.futures import ThreadPoolExecutor
 import sys
 
@@ -31,7 +51,7 @@ import multiprocessing as mp
 from misc.log_control import setup_loggers
 
 setup_loggers()
-
+printMessage(f"Start of application.......", level=2)
 
 def setupArgParser():
     parser = argparse.ArgumentParser()
@@ -89,26 +109,6 @@ def setupArgParser():
     return parser
 
 
-def printMessage(message, level=0):
-    pf = platform.system()
-    if pf == "Windows":
-        if level == 0:
-            print(f"{message}")
-        elif level == 1:
-            print(f"    {message}")
-        elif level == 2:
-            print(f"    {message}")
-        else:
-            print(f"    {message}")
-    else:
-        if level == 0:
-            print(f"\033[17m{message}\033[0m")
-        elif level == 1:
-            print(f"\033[34m    {message}\033[0m")
-        elif level == 2:
-            print(f"\033[32m    {message}\033[0m")
-        else:
-            print(f"\033[47m    {message}\033[0m")
 
 
 def downloadWeight():
@@ -198,6 +198,7 @@ def localServer(logLevel: str = "critical"):
 
 
 if __name__ == "MMVCServerSIO":
+    printMessage(f"Start of application.......MMVCServerSIO", level=2)
     mp.freeze_support()
     voiceChangerParams = VoiceChangerParams(
         model_dir=args.model_dir,
@@ -217,6 +218,8 @@ if __name__ == "MMVCServerSIO":
     ):
         printMessage("RVC用のモデルファイルのダウンロードに失敗しました。", level=2)
         printMessage("failed to download weight for rvc", level=2)
+    else:
+        printMessage(f"Download weight success.........", level=2)
 
     voiceChangerManager = VoiceChangerManager.get_instance(voiceChangerParams)
     app_fastapi = MMVC_Rest.get_instance(voiceChangerManager, voiceChangerParams)
