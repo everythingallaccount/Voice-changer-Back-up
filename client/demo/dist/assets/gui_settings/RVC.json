@@ -36,6 +36,10 @@
                     "showExportOnnx": true,
                     "showReload": true
                 }
+            },
+            {
+                "name": "serverURL",
+                "options": {}
             }
         ],
         "modelSetting": [
