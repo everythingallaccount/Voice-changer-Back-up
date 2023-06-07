@@ -258,13 +258,13 @@ if __name__ == "__main__":
 
     if os.getenv("EX_PORT"):
         EX_PORT = os.environ["EX_PORT"]
-        printMessage(f"External_Port:{EX_PORT} Internal_Port:{PORT}", level=1)
+        printMessage(f"External_Portttttttt:{EX_PORT} Internal_Port:{PORT}", level=1)
     else:
-        printMessage(f"Internal_Port:{PORT}", level=1)
+        printMessage(f"Internal_Portttttttt:{PORT}", level=1)
 
     if os.getenv("EX_IP"):
         EX_IP = os.environ["EX_IP"]
-        printMessage(f"External_IP:{EX_IP}", level=1)
+        printMessage(f"External_IPPPPPPPPPPP:{EX_IP}", level=1)
 
     # HTTPS key/cert作成
     if args.https and args.httpsSelfSigned == 1:
