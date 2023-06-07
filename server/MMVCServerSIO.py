@@ -231,6 +231,8 @@ if __name__ == "__mp_main__":
     printMessage("Starting server processssssssssssssssss. サーバプロセスを起動しています。", level=2)
 
 if __name__ == "__main__":
+    printMessage("This is __main__...................................", level=2)
+
     mp.freeze_support()
 
     printMessage("Voice Changerを起動しています。", level=2)
