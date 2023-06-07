@@ -312,6 +312,8 @@ if __name__ == "__main__":
 
 
     if "EX_PORT" in locals() and "EX_IP" in locals():  # シェルスクリプト経由起動(docker)
+        printMessage(f"socket Is delayed to be connected and initialized......................", level=1)
+
         if args.https == 1:
             printMessage(f"https://localhost:{EX_PORT}/", level=1)
             for ip in EX_IP.strip().split(" "):
