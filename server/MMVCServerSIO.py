@@ -334,6 +334,8 @@ if __name__ == "__main__":
 
     # サーバ起動
     if args.https:
+        print("HTTPS is ..................")
+
         # HTTPS サーバ起動
         uvicorn.run(
             f"{os.path.basename(__file__)[:-3]}:app_socketio",
@@ -345,8 +347,14 @@ if __name__ == "__main__":
             log_level=args.logLevel,
         )
     else:
+        print("HTTPS is not..................")
+
         p = mp.Process(name="p", target=localServer, args=(args.logLevel,))
+        print("Prepare to start the process.")
+
         p.start()
+        print("Prepare to start the process............Should be start.")
+
         try:
             if sys.platform.startswith("win"):
                 print("eeeeeeeeeeeeeeeeeeeeeeeeeeee2",NATIVE_CLIENT_FILE_WIN)
