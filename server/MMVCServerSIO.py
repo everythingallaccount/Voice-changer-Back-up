@@ -309,6 +309,8 @@ if __name__ == "__main__":
         printMessage("http://<IP>:<PORT>/", level=1)
 
     printMessage("多くの場合は次のいずれかのURLにアクセスすると起動します。", level=2)
+
+
     if "EX_PORT" in locals() and "EX_IP" in locals():  # シェルスクリプト経由起動(docker)
         if args.https == 1:
             printMessage(f"https://localhost:{EX_PORT}/", level=1)
@@ -317,6 +319,8 @@ if __name__ == "__main__":
         else:
             printMessage(f"http://localhost:{EX_PORT}/", level=1)
     else:  # 直接python起動
+        printMessage(f"socket is directly connected in initialized.....................", level=1)
+
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         hostname = s.getsockname()[0]
