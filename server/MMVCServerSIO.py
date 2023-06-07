@@ -250,6 +250,7 @@ if __name__ == "__main__":
             sampleJsons.append(filename)
         if checkRvcModelExist(args.model_dir) is False:
             downloadInitialSampleModels(sampleJsons, sampleModels, args.model_dir)
+        print("[Voice Changer] loading Sample is successful.")
     except Exception as e:
         print("[Voice Changer] loading sample failed", e)
 
