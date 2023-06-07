@@ -375,5 +375,5 @@ if __name__ == "__main__":
                 p.terminate()
 
         except Exception as e:
-            print("eeeeeeeeeeeeeeeeeeeeeeeeeeee")
+            print("Exception are phased.   Seems that the front end client is not open successfully?")
             print(e)
