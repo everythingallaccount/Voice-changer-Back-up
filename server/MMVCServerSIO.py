@@ -350,10 +350,10 @@ if __name__ == "__main__":
         print("HTTPS is not..................")
 
         p = mp.Process(name="p", target=localServer, args=(args.logLevel,))
-        print("Prepare to start the process.")
+        print("Prepare to start the localServer process.")
 
         p.start()
-        print("Prepare to start the process............Should be start.")
+        print("localServer process............Should be start.")
 
         try:
             if sys.platform.startswith("win"):
