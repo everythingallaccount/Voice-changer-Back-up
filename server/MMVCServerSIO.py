@@ -178,11 +178,12 @@ def downloadWeight():
         printMessage("RVC用のモデルファイルのダウンロードに失敗しました。", level=2)
         printMessage("failed to download weight for rvc", level=2)
 
+printMessage(f"Prepare to set up setupArgParser", level=2)
 
 parser = setupArgParser()
 args, unknown = parser.parse_known_args()
 
-printMessage(f"Booting PHASE :{__name__}", level=2)
+printMessage(f"Booting PHASE ::::::::::::::::::::{__name__}", level=2)
 
 PORT = args.p
 
@@ -224,10 +225,10 @@ if __name__ == "MMVCServerSIO":
     voiceChangerManager = VoiceChangerManager.get_instance(voiceChangerParams)
     app_fastapi = MMVC_Rest.get_instance(voiceChangerManager, voiceChangerParams)
     app_socketio = MMVC_SocketIOApp.get_instance(app_fastapi, voiceChangerManager)
-
+    printMessage(f"app_socketio Finish Initialize........", level=2)
 
 if __name__ == "__mp_main__":
-    printMessage("サーバプロセスを起動しています。", level=2)
+    printMessage("Starting server processssssssssssssssss. サーバプロセスを起動しています。", level=2)
 
 if __name__ == "__main__":
     mp.freeze_support()
