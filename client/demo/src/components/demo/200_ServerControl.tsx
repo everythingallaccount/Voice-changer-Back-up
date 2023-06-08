@@ -31,7 +31,7 @@ export const ServerControl = () => {
             <>
 
 
-                <div>bbbbbbbbb5</div>
+                {/*<div>bbbbbbbbb5</div>*/}
 
                 {guiState.stateControls.openServerControlCheckbox.trigger}
 
@@ -42,7 +42,8 @@ export const ServerControl = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openServerControlCheckbox.updateState(!guiState.stateControls.openServerControlCheckbox.checked()) }}>
-                            Server Controlllllllllllll
+                            {/*Server Controlllllllllllll*/}
+                            服务器状态控制
                         </span>
                     </div>
 
