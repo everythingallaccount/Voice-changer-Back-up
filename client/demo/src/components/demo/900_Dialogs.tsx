@@ -19,6 +19,12 @@ export const Dialogs = () => {
                 {guiState.stateControls.showWaitingCheckbox.trigger}
                 <WaitingDialog></WaitingDialog>
                 {guiState.stateControls.showStartingNoticeCheckbox.trigger}
+
+
+
+
+
+
                 <StartingNoticeDialog></StartingNoticeDialog>
             </div>
             {/*<div>bbbbbbbbbbbbbb2</div>*/}

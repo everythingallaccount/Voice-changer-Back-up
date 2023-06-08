@@ -55,6 +55,17 @@ export const StartingNoticeDialog = () => {
             </div>
         )
 
+        const donationMessage1 = (
+            <div className="dialog-content-part">
+                <div>
+                    感谢你购买使用我们开始吧。
+                </div>
+                {/*<div>*/}
+                {/*    {coffeeLink}*/}
+                {/*</div>*/}
+            </div>
+        )
+
         const directMLMessage = (
             <div className="dialog-content-part">
                 <div>
@@ -68,7 +79,9 @@ export const StartingNoticeDialog = () => {
         const clickToStartMessage = (
             <div className="dialog-content-part">
                 <div>
-                    {getMessage("click_to_start_1")}
+                    {/*{getMessage("click_to_start_1")}*/}
+                    开始
+
                 </div>
             </div>
         )
@@ -76,7 +89,7 @@ export const StartingNoticeDialog = () => {
         const edition = appGuiSettingState.edition
         const content = (
             <div className="body-row">
-                {lang != "ja" || edition.indexOf("onnxdirectML-cuda") >= 0 ? donationMessage : <></>}
+                {lang != "ja" || edition.indexOf("onnxdirectML-cuda") >= 0 ? donationMessage1 : <></>}
                 {edition.indexOf("onnxdirectML-cuda") >= 0 ? directMLMessage : <></>}
                 {clickToStartMessage}
             </div>
