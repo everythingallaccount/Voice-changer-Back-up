@@ -14,7 +14,7 @@ import { Lab } from "./a00_Lab";
 export const Demo = () => {
     return (
         <GuiStateProvider>
-            aaaaaaaaaaaaaaaaaaaaaaGuiStateProvider
+            {/*aaaaaaaaaaaaaaaaaaaaaaGuiStateProvider*/}
             <div className="main-body">
                 <Dialogs />
                 <TitleArea />

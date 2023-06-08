@@ -137,8 +137,15 @@ export const Title = (props: TitleProps) => {
         } else {
             return (
                 <div className="top-title">
-                    <span className="title">{props.mainTitle}</span>
-                    <span className="top-title-version">{props.subTitle}</span>
+                    <span className="title">
+
+                        变声器
+                        {/*{props.mainTitle}*/}
+                    </span>
+                    <span className="top-title-version">
+
+                        {props.subTitle}
+                    </span>
                     <span className="top-title-version-number">{appRootState.appGuiSettingState.version}</span>
                     <span className="top-title-version-number">{appRootState.appGuiSettingState.edition}</span>
                     <span className="belongings">

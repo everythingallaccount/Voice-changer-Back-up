@@ -9,7 +9,7 @@ export const Dialogs = () => {
     const guiState = useGuiState()
     const dialogs = (
         <div>
-            <div>bbbbbbbbbbbbbb</div>
+            {/*<div>bbbbbbbbbbbbbb</div>*/}
             {guiState.stateControls.showLicenseCheckbox.trigger}
             {guiState.stateControls.showWaitingCheckbox.trigger}
             {guiState.stateControls.showStartingNoticeCheckbox.trigger}
@@ -21,7 +21,7 @@ export const Dialogs = () => {
                 {guiState.stateControls.showStartingNoticeCheckbox.trigger}
                 <StartingNoticeDialog></StartingNoticeDialog>
             </div>
-            <div>bbbbbbbbbbbbbb2</div>
+            {/*<div>bbbbbbbbbbbbbb2</div>*/}
         </div>
     );
 
