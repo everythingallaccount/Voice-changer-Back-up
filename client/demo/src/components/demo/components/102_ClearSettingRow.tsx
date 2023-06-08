@@ -39,11 +39,20 @@ export const ClearSettingRow = (_props: ClearSettingRowProps) => {
         return (
             <div className="body-row split-2-2-6 left-padding-1">
                 <div className="body-button-container">
-                    <div className="body-button" onClick={onClearSettingClicked}>clear setting</div>
-                    <div className="body-button" onClick={onReloadClicked}>reload</div>
+                    <div className="body-button" onClick={onClearSettingClicked}>
+                        {/*clear setting*/}
+                        清除设置
+                    </div>
+                    <div className="body-button" onClick={onReloadClicked}>
+                        {/*reload*/}
+                        重新加载
+                    </div>
                 </div>
                 <div className="body-button-container">
-                    <div className="body-button" onClick={onReselectVCClicked}>re-select vc</div>
+                    <div className="body-button" onClick={onReselectVCClicked}>
+                        {/*re-select vc*/}
+                        重新选择变声器
+                    </div>
                 </div>
                 <div className="body-item-text"></div>
             </div>
