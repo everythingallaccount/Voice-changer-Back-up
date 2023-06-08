@@ -29,7 +29,7 @@ export const ModelSetting = () => {
         return (
             <>
 
-                <div>bbbbbbbbb7</div>
+                {/*<div>bbbbbbbbb7</div>*/}
                 {guiState.stateControls.openModelSettingCheckbox.trigger}
                 <div className="partition">
                     <div className="partition-header">
@@ -37,7 +37,8 @@ export const ModelSetting = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openModelSettingCheckbox.updateState(!guiState.stateControls.openModelSettingCheckbox.checked()) }}>
-                            Model Setting
+                            {/*Model Setting*/}
+                            模型设置
                         </span>
                         <span></span>
                     </div>
