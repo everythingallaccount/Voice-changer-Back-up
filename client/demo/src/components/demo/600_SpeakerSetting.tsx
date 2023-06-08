@@ -35,7 +35,8 @@ export const SpeakerSetting = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openSpeakerSettingCheckbox.updateState(!guiState.stateControls.openSpeakerSettingCheckbox.checked()) }}>
-                            Speaker Setting
+                            {/*Speaker Setting*/}
+                            扬声器设置
                         </span>
                         <span></span>
                     </div>

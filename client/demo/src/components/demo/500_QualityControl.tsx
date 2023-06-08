@@ -35,7 +35,8 @@ export const QualityControl = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openQualityControlCheckbox.updateState(!guiState.stateControls.openQualityControlCheckbox.checked()) }}>
-                            Quality Control
+                            {/*Quality Control*/}
+                            质量控制
                         </span>
                         <span></span>
                     </div>

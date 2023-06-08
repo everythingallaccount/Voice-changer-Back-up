@@ -35,7 +35,8 @@ export const ConverterSetting = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openConverterSettingCheckbox.updateState(!guiState.stateControls.openConverterSettingCheckbox.checked()) }}>
-                            Converter Setting
+                            {/*Converter Setting*/}
+                            转换器设置
                         </span>
                         <span></span>
                     </div>

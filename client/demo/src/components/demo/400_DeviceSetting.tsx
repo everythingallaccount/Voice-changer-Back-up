@@ -36,7 +36,8 @@ export const DeviceSetting = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openDeviceSettingCheckbox.updateState(!guiState.stateControls.openDeviceSettingCheckbox.checked()) }}>
-                            Device Setting
+                            {/*Device Setting*/}
+                            设备设置
                         </span>
                         <span></span>
                     </div>

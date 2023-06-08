@@ -34,7 +34,8 @@ export const AdvancedSetting = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openAdvancedSettingCheckbox.updateState(!guiState.stateControls.openAdvancedSettingCheckbox.checked()) }}>
-                            Advanced Setting
+                            {/*Advanced Setting*/}
+                            进阶设置
                         </span>
                         <span></span>
                     </div>

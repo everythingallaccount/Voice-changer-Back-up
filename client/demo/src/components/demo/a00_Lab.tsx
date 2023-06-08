@@ -34,7 +34,8 @@ export const Lab = () => {
                             {accodionButton}
                         </span>
                         <span className="title" onClick={() => { guiState.stateControls.openLabCheckbox.updateState(!guiState.stateControls.openLabCheckbox.checked()) }}>
-                            Labs (Experimental)
+                            {/*Labs (Experimental)*/}
+                            实验室 不稳定
                         </span>
                         <span></span>
                     </div>
