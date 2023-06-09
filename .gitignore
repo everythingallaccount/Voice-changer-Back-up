@@ -4,12 +4,13 @@ node_modules
 __pycache__
 
 server/upload_dir/
-server/MMVC_Client_v13/
-server/MMVC_Client_v15/
-server/so-vits-svc-40/
-server/so-vits-svc-40v2/
-server/DDSP-SVC/
-server/RVC/
+#server/MMVC_Client_v13/
+#server/MMVC_Client_v15/
+#server/so-vits-svc-40/
+#server/so-vits-svc-40v2/
+#server/DDSP-SVC/
+#server/RVC/
+
 server/keys
 server/info
 server/in.wav
