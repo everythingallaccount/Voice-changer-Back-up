@@ -1,0 +1,3 @@
+pyinstaller   MMVCServerSIO.py
+
+pyinstaller   MMVCServerSIO.py  --additional-hooks-dir "./extra-hooks"
