@@ -109,7 +109,7 @@ def printMessage(message, level=0):
         else:
             print(f"\033[47m    {message}\033[0m")
 
-
+printMessage(f"Booting PHASE :{__name__}", level=2)
 def downloadWeight():
     # content_vec_500 = (args.content_vec_500,)
     # content_vec_500_onnx = (args.content_vec_500_onnx,)
@@ -192,7 +192,7 @@ args=argparse.Namespace(logLevel='critical', p=18889, https=1, httpsKey='ssl.key
 l("args",args)
 # exit(11111111)
 
-printMessage(f"Booting PHASE :{__name__}", level=2)
+
 
 PORT = args.p
 
@@ -329,6 +329,7 @@ if __name__ == "__main__":
 
     # サーバ起動
     if args.https:
+        printMessage(f"Prepare to one UVI.1", level=1)
         # HTTPS サーバ起動
         uvicorn.run(
             f"{os.path.basename(__file__)[:-3]}:app_socketio",
@@ -340,6 +341,8 @@ if __name__ == "__main__":
             log_level=args.logLevel,
         )
     else:
+        printMessage(f"Prepare to one UVI.2", level=1)
+
         p = mp.Process(name="p", target=localServer, args=(args.logLevel,))
         p.start()
         try:
