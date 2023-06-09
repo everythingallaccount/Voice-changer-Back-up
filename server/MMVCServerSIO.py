@@ -6,6 +6,10 @@ formatter = logging.Formatter('%(asctime)s [%(processName)-10s] [%(threadName)s]
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 # logger.addHandler(handler)
+def l(p):
+    # from builtins import print as l
+    logger.info(p)
+
 
 logger.error("testtttttttttttttttttttttttttttttttttt")
 import os
@@ -32,7 +36,7 @@ import platform
 import argparse
 from Downloader import download, download_no_tqdm
 
-from builtins import print as l
+
 from voice_changer.RVC.SampleDownloader import (
     checkRvcModelExist,
     downloadInitialSampleModels,
@@ -209,8 +213,8 @@ parser = setupArgParser()
 args, unknown = parser.parse_known_args()
 
 
-def p(l,l2=None,l3=None):
-    print(l,l2,l3)
+# def p(l,l2=None,l3=None):
+#     print(l,l2,l3)
 
 
 logger.info("Now that all the arguments are being overwritten now.")
@@ -278,11 +282,24 @@ if __name__ == "__main__":
         sampleJsons = []
         for url in SAMPLES_JSONS:
             filename = os.path.basename(url)
+            l(f"filename:{filename}")
             download_no_tqdm({"url": url, "saveTo": filename, "position": 0})
+            l("a")
             sampleJsons.append(filename)
         if checkRvcModelExist(args.model_dir) is False:
+            l("v")
             downloadInitialSampleModels(sampleJsons, args.model_dir)
+            l("q")
+        else:
+            l(f"No need to download again because it exists.{args.model_dir}")
+
     except Exception as e:
+        # Importtraceback.
+        import traceback
+
+        traceback.print_exc()
+
+
         print("[Voice Changer] loading sample failed", e)
 
     PORT = args.p
