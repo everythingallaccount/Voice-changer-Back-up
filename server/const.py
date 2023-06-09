@@ -58,6 +58,7 @@ os.makedirs(TMP_DIR, exist_ok=True)
 
 
 def getFrontendPath():
+    print("aaaaaaaaeeeeeee3", sys._MEIPASS)
     frontend_path = (
         os.path.join(sys._MEIPASS, "dist")
         if hasattr(sys, "_MEIPASS")
