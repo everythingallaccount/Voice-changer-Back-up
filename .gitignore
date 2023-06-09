@@ -59,3 +59,7 @@ venv/
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+
+
+/server/build/
+/server/dist/
