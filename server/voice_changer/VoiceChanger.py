@@ -313,6 +313,8 @@ class VoiceChanger:
 
                 self.voiceChanger = MMVCv13()
         except Exception as e:
+            print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+                  "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
             print(e)
             print(traceback.format_exc())
         return {"status": "OK", "msg": "vc is switched."}
@@ -344,7 +346,7 @@ class VoiceChanger:
 
     def update_settings(self, key: str, val: Any):
         if self.voiceChanger is None:
-            print("[Voice Changer] Voice Changer is not selected.")
+            print("[Voice Changer] Voice Changer is not selected.22222222")
             return self.get_info()
 
         if key in self.settings.intData:
@@ -584,14 +586,14 @@ class VoiceChanger:
 
     def merge_models(self, request: str):
         if self.voiceChanger is None:
-            print("[Voice Changer] Voice Changer is not selected.")
+            print("[Voice Changer] Voice Changer is not selected.3333333333333333")
             return
         self.voiceChanger.merge_models(request)
         return self.get_info()
 
     def update_model_default(self):
         if self.voiceChanger is None:
-            print("[Voice Changer] Voice Changer is not selected.")
+            print("[Voice Changer] Voice Changer is not selected.44444444444444444444")
             return
         self.voiceChanger.update_model_default()
         return self.get_info()

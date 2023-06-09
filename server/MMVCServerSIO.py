@@ -411,7 +411,7 @@ if __name__ == "__main__":
                             reload=False if hasattr(sys, "_MEIPASS") else True,
                             ssl_keyfile=key_path,
                             ssl_certfile=cert_path,
-                         log_level="debug",
+                 log_level=args.logLevel,
                  # debug=True,
                                                                     workers=1,
                  # limit_concurrency=1
