@@ -64,6 +64,8 @@ def getFrontendPath():
         if hasattr(sys, "_MEIPASS")
         else "../client/demo/dist"
     )
+    print("We turn it.")
+
     return frontend_path
 
 
