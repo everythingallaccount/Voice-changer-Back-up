@@ -340,6 +340,8 @@ if __name__ == "__main__":
             ssl_certfile=cert_path,
             log_level=args.logLevel,
         )
+        printMessage(f"Prepare to one UVI.1     Finish.jhhhhhhhhhhhh", level=1)
+
     else:
         printMessage(f"Prepare to one UVI.2", level=1)
 
@@ -348,7 +350,7 @@ if __name__ == "__main__":
 
         printMessage(f"P should be started.", level=1)
 
-        
+
         if(0):
             try:
                 if sys.platform.startswith("win"):
