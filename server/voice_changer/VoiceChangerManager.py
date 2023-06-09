@@ -56,6 +56,7 @@ class VoiceChangerManager(object):
             return np.zeros(1).astype(np.int16), []
 
     def switchModelType(self, modelType: ModelType):
+        print("2222223","switchModelType",modelType)
         return self.voiceChanger.switchModelType(modelType)
 
     def getModelType(self):

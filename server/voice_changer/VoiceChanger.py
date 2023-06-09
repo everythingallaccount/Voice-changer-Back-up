@@ -274,6 +274,7 @@ class VoiceChanger:
         )
 
     def switchModelType(self, modelType: ModelType):
+        print("switchModelTypeeeeeeeeeee", modelType)
         try:
             if self.voiceChanger is not None:
                 # return {"status": "ERROR", "msg": "vc is already selected. currently re-select is not implemented"}
