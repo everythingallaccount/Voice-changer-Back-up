@@ -63,3 +63,4 @@ venv/
 
 /server/build/
 /server/dist/
+/server/dist2/
