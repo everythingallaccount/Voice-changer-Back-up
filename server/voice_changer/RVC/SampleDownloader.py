@@ -11,7 +11,9 @@ from voice_changer.RVC.ModelSlotGenerator import _setInfoByONNX, _setInfoByPytor
 
 
 def checkRvcModelExist(model_dir: str):
+
     rvcModelDir = os.path.join(model_dir, RVC_MODEL_DIRNAME)
+    print("aaaa", rvcModelDir)
     if not os.path.exists(rvcModelDir):
         return False
     return True
