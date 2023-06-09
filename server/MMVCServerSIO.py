@@ -1,3 +1,4 @@
+
 import multiprocessing
 import logging
 logger = multiprocessing.log_to_stderr(logging.INFO)
@@ -10,6 +11,14 @@ logger.error("testtttttttttttttttttttttttttttttttttt")
 import os
 # logger.info(os.path.basename(__file__)[:-3])
 # logger.info(os.path.basename(__file__))
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+async def read_root():
+    return {"Hello": "World"}
+
 
 
 from concurrent.futures import ThreadPoolExecutor
