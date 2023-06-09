@@ -63,3 +63,6 @@ venv/
 .idea/modules.xml
 .idea/vcs.xml
 .idea/voice-changer.iml
+server/.idea/misc.xml
+server/.idea/server.iml
+server/.idea/server.iml
