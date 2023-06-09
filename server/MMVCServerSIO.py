@@ -250,7 +250,7 @@ if __name__ == "MMVCServerSIO":
 
     voiceChangerManager = VoiceChangerManager.get_instance(voiceChangerParams)
     app_fastapi = MMVC_Rest.get_instance(voiceChangerManager, voiceChangerParams)
-    app_socketio1 = MMVC_SocketIOApp.get_instance(app_fastapi, voiceChangerManager)
+    app_socketio = MMVC_SocketIOApp.get_instance(app_fastapi, voiceChangerManager)
 
 
 if __name__ == "__mp_main__":
