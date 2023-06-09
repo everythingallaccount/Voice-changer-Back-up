@@ -8,31 +8,37 @@ class UvicornSuppressFilter(logging.Filter):
         return False
 
 
+
+
 def setup_loggers():
-    # logger = logging.getLogger("uvicorn.error")
-    # logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("fairseq.tasks.hubert_pretraining")
-    logger.addFilter(UvicornSuppressFilter())
+    if 0:
+        # logger = logging.getLogger("uvicorn.error")
+        # logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("fairseq.models.hubert.hubert")
-    logger.addFilter(UvicornSuppressFilter())
+        logger = logging.getLogger("fairseq.tasks.hubert_pretraining")
+        logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("fairseq.tasks.text_to_speech")
-    logger.addFilter(UvicornSuppressFilter())
+        logger = logging.getLogger("fairseq.models.hubert.hubert")
+        logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("numba.core.ssa")
-    logger.addFilter(UvicornSuppressFilter())
+        logger = logging.getLogger("fairseq.tasks.text_to_speech")
+        logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("numba.core.interpreter")
-    logger.addFilter(UvicornSuppressFilter())
+        logger = logging.getLogger("numba.core.ssa")
+        logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("numba.core.byteflow")
-    logger.addFilter(UvicornSuppressFilter())
+        logger = logging.getLogger("numba.core.interpreter")
+        logger.addFilter(UvicornSuppressFilter())
 
-    # logger.propagate = False
+        logger = logging.getLogger("numba.core.byteflow")
+        logger.addFilter(UvicornSuppressFilter())
 
-    logger = logging.getLogger("multipart.multipart")
-    logger.propagate = False
+        # logger.propagate = False
 
-    logging.getLogger("asyncio").setLevel(logging.WARNING)
+        logger = logging.getLogger("multipart.multipart")
+        logger.propagate = False
+
+        logging.getLogger("asyncio").setLevel(logging.WARNING)
+    else:
+        pass

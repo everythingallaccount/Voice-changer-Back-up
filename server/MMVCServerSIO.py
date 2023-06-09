@@ -1,3 +1,17 @@
+import multiprocessing
+import logging
+logger = multiprocessing.log_to_stderr(logging.INFO)
+formatter = logging.Formatter('%(asctime)s [%(processName)-10s] [%(threadName)s] %(levelname)-8s %(message)s')
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+# logger.addHandler(handler)
+
+logger.error("testtttttttttttttttttttttttttttttttttt")
+import os
+logger.info(os.path.basename(__file__)[:-3])
+logger.info(os.path.basename(__file__))
+
+
 from concurrent.futures import ThreadPoolExecutor
 import sys
 
@@ -5,7 +19,7 @@ from distutils.util import strtobool
 from datetime import datetime
 import socket
 import platform
-import os
+
 import argparse
 from Downloader import download, download_no_tqdm
 
@@ -33,6 +47,7 @@ import multiprocessing as mp
 from misc.log_control import setup_loggers
 
 setup_loggers()
+
 
 
 def setupArgParser():
@@ -89,25 +104,28 @@ def setupArgParser():
 
 
 def printMessage(message, level=0):
-    pf = platform.system()
-    if pf == "Windows":
-        if level == 0:
-            print(f"{message}")
-        elif level == 1:
-            print(f"    {message}")
-        elif level == 2:
-            print(f"    {message}")
-        else:
-            print(f"    {message}")
-    else:
-        if level == 0:
-            print(f"\033[17m{message}\033[0m")
-        elif level == 1:
-            print(f"\033[34m    {message}\033[0m")
-        elif level == 2:
-            print(f"\033[32m    {message}\033[0m")
-        else:
-            print(f"\033[47m    {message}\033[0m")
+    logger.info(message)
+
+
+    # pf = platform.system()
+    # if pf == "Windows":
+    #     if level == 0:
+    #         print(f"{message}")
+    #     elif level == 1:
+    #         print(f"    {message}")
+    #     elif level == 2:
+    #         print(f"    {message}")
+    #     else:
+    #         print(f"    {message}")
+    # else:
+    #     if level == 0:
+    #         print(f"\033[17m{message}\033[0m")
+    #     elif level == 1:
+    #         print(f"\033[34m    {message}\033[0m")
+    #     elif level == 2:
+    #         print(f"\033[32m    {message}\033[0m")
+    #     else:
+    #         print(f"\033[47m    {message}\033[0m")
 
 printMessage(f"Booting PHASE :{__name__}", level=2)
 def downloadWeight():
@@ -187,7 +205,7 @@ def p(l,l2=None,l3=None):
 
 
 l("Now that all the arguments are being overwritten now.")
-args=argparse.Namespace(logLevel='critical', p=18889, https=1, httpsKey='ssl.key', httpsCert='ssl.cert', httpsSelfSigned=True, model_dir='model_dir', content_vec_500='pretrain/checkpoint_best_legacy_500.pt', content_vec_500_onnx=None, content_vec_500_onnx_on=False, hubert_base='pretrain/hubert_base.pt', hubert_base_jp='pretrain/rinna_hubert_base_jp.pt', hubert_soft='pretrain/hubert/hubert-soft-0d54a1f4.pt', nsf_hifigan='pretrain/nsf_hifigan/model')
+args=argparse.Namespace(logLevel='critical', p=18889, https=0, httpsKey='ssl.key', httpsCert='ssl.cert', httpsSelfSigned=True, model_dir='model_dir', content_vec_500='pretrain/checkpoint_best_legacy_500.pt', content_vec_500_onnx=None, content_vec_500_onnx_on=False, hubert_base='pretrain/hubert_base.pt', hubert_base_jp='pretrain/rinna_hubert_base_jp.pt', hubert_soft='pretrain/hubert/hubert-soft-0d54a1f4.pt', nsf_hifigan='pretrain/nsf_hifigan/model')
 
 l("args",args)
 # exit(11111111)
@@ -208,6 +226,7 @@ def localServer(logLevel: str = "critical"):
 
 
 if __name__ == "MMVCServerSIO":
+    logger.info("MMVCServerSIO Freezing support")
     mp.freeze_support()
     voiceChangerParams = VoiceChangerParams(
         model_dir=args.model_dir,
@@ -229,7 +248,7 @@ if __name__ == "MMVCServerSIO":
 
     voiceChangerManager = VoiceChangerManager.get_instance(voiceChangerParams)
     app_fastapi = MMVC_Rest.get_instance(voiceChangerManager, voiceChangerParams)
-    app_socketio = MMVC_SocketIOApp.get_instance(app_fastapi, voiceChangerManager)
+    app_socketio1 = MMVC_SocketIOApp.get_instance(app_fastapi, voiceChangerManager)
 
 
 if __name__ == "__mp_main__":
