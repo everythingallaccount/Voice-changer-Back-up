@@ -70,6 +70,7 @@ RUN cd RVC && git checkout 563c64ded9925085f547b13ecafb8eb9c182952b && cd -
 
 ADD /setup.sh  /voice-changer/server
 ADD /exec.sh  /voice-changer/server
+RUN git fetch
 
 RUN git fetch
 RUN git pull
