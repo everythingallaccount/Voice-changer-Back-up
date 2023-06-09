@@ -8,8 +8,8 @@ handler.setFormatter(formatter)
 
 logger.error("testtttttttttttttttttttttttttttttttttt")
 import os
-logger.info(os.path.basename(__file__)[:-3])
-logger.info(os.path.basename(__file__))
+# logger.info(os.path.basename(__file__)[:-3])
+# logger.info(os.path.basename(__file__))
 
 
 from concurrent.futures import ThreadPoolExecutor
@@ -204,10 +204,10 @@ def p(l,l2=None,l3=None):
     print(l,l2,l3)
 
 
-l("Now that all the arguments are being overwritten now.")
+logger.info("Now that all the arguments are being overwritten now.")
 args=argparse.Namespace(logLevel='critical', p=18889, https=0, httpsKey='ssl.key', httpsCert='ssl.cert', httpsSelfSigned=True, model_dir='model_dir', content_vec_500='pretrain/checkpoint_best_legacy_500.pt', content_vec_500_onnx=None, content_vec_500_onnx_on=False, hubert_base='pretrain/hubert_base.pt', hubert_base_jp='pretrain/rinna_hubert_base_jp.pt', hubert_soft='pretrain/hubert/hubert-soft-0d54a1f4.pt', nsf_hifigan='pretrain/nsf_hifigan/model')
 
-l("args",args)
+# l("args",args)
 # exit(11111111)
 
 
@@ -222,12 +222,14 @@ def localServer(logLevel: str = "critical"):
         port=int(PORT),
         reload=False if hasattr(sys, "_MEIPASS") else True,
         log_level=logLevel,
+        # workers=10
     )
 
 
 if __name__ == "MMVCServerSIO":
-    logger.info("MMVCServerSIO Freezing support")
     mp.freeze_support()
+    logger.info("MMVCServerSIO Freezing support")
+
     voiceChangerParams = VoiceChangerParams(
         model_dir=args.model_dir,
         content_vec_500=args.content_vec_500,
