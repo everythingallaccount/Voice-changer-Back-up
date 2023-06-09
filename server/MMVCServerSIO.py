@@ -187,8 +187,8 @@ printMessage(f"Booting PHASE ::::::::::::::::::::{__name__}", level=2)
 
 PORT = args.p
 
-args.p=18889
-PORT = 18889
+# args.p=18889
+# PORT = 18889
 
 def localServer(logLevel: str = "critical"):
     printMessage(f"Path checking.gggggggg {os.path.basename(__file__)[:-3]}:app_socketio", level=2)
