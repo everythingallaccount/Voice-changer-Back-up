@@ -2,9 +2,9 @@
 
 set -eu
 
-cp -r /weights/* /voice-changer/server/
+#cp -r /weights/* /voice-changer/server/
 # /bin/bash
-
+echo "parameterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $@"
 python3 MMVCServerSIO.py $@
 # python3 MMVCServerSIO.py -p 18888 --https true \
 #   --content_vec_500 checkpoint_best_legacy_500.pt \

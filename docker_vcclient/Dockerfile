@@ -40,7 +40,9 @@ RUN apt-get update \
 WORKDIR /
 ADD dummy /
 
-RUN git clone https://github.com/everythingallaccount/Voice-changer-Back-up  voice-changer
+#git clone https://github.com/everythingallaccount/Voice-changer-Back-up  voice-changer
+RUN git clone https://github.com/w-okada/voice-changer.git -b v.1.5.3.4
+
 
 
 
@@ -70,8 +72,8 @@ RUN cd RVC && git checkout 563c64ded9925085f547b13ecafb8eb9c182952b && cd -
 
 ADD /setup.sh  /voice-changer/server
 ADD /exec.sh  /voice-changer/server
-RUN git fetch
-
-RUN git fetch
-RUN git pull
+#RUN git fetch
+#
+#RUN git fetch
+#RUN git pull
 ENTRYPOINT ["/bin/bash", "setup.sh"]
