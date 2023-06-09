@@ -8,6 +8,8 @@ import platform
 import os
 import argparse
 from Downloader import download, download_no_tqdm
+
+from builtins import print as l
 from voice_changer.RVC.SampleDownloader import (
     checkRvcModelExist,
     downloadInitialSampleModels,
@@ -178,6 +180,17 @@ def downloadWeight():
 
 parser = setupArgParser()
 args, unknown = parser.parse_known_args()
+
+
+def p(l,l2=None,l3=None):
+    print(l,l2,l3)
+
+
+
+args=argparse.Namespace(logLevel='critical', p=18889, https=1, httpsKey='ssl.key', httpsCert='ssl.cert', httpsSelfSigned=True, model_dir='model_dir', content_vec_500='pretrain/checkpoint_best_legacy_500.pt', content_vec_500_onnx=None, content_vec_500_onnx_on=False, hubert_base='pretrain/hubert_base.pt', hubert_base_jp='pretrain/rinna_hubert_base_jp.pt', hubert_soft='pretrain/hubert/hubert-soft-0d54a1f4.pt', nsf_hifigan='pretrain/nsf_hifigan/model')
+
+l("args",args)
+# exit(11111111)
 
 printMessage(f"Booting PHASE :{__name__}", level=2)
 
