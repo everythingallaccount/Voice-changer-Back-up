@@ -218,7 +218,7 @@ args, unknown = parser.parse_known_args()
 
 
 logger.info("Now that all the arguments are being overwritten now.")
-args=argparse.Namespace(logLevel='critical', p=18889, https=0, httpsKey='ssl.key', httpsCert='ssl.cert', httpsSelfSigned=True, model_dir='model_dir', content_vec_500='pretrain/checkpoint_best_legacy_500.pt', content_vec_500_onnx=None, content_vec_500_onnx_on=False, hubert_base='pretrain/hubert_base.pt', hubert_base_jp='pretrain/rinna_hubert_base_jp.pt', hubert_soft='pretrain/hubert/hubert-soft-0d54a1f4.pt', nsf_hifigan='pretrain/nsf_hifigan/model')
+args=argparse.Namespace(logLevel='critical', p=18889, https=1, httpsKey='ssl.key', httpsCert='ssl.cert', httpsSelfSigned=True, model_dir='model_dir', content_vec_500='pretrain/checkpoint_best_legacy_500.pt', content_vec_500_onnx=None, content_vec_500_onnx_on=False, hubert_base='pretrain/hubert_base.pt', hubert_base_jp='pretrain/rinna_hubert_base_jp.pt', hubert_soft='pretrain/hubert/hubert-soft-0d54a1f4.pt', nsf_hifigan='pretrain/nsf_hifigan/model')
 
 # l("args",args)
 # exit(11111111)
@@ -229,14 +229,27 @@ PORT = args.p
 
 
 def localServer(logLevel: str = "critical"):
-    uvicorn.run(
-        f"{os.path.basename(__file__)[:-3]}:app_socketio",
-        host="0.0.0.0",
-        port=int(PORT),
-        reload=False if hasattr(sys, "_MEIPASS") else True,
-        log_level=logLevel,
-        # workers=10
-    )
+    if 0:
+        uvicorn.run(
+            f"{os.path.basename(__file__)[:-3]}:app_socketio",
+            host="0.0.0.0",
+            port=int(PORT),
+            reload=False if hasattr(sys, "_MEIPASS") else True,
+            log_level=logLevel,
+            # workers=10
+        )
+    else:
+        uvicorn.run(
+                f"{os.path.basename(__file__)[:-3]}:app_socketio",
+                host="0.0.0.0",
+                port=int(PORT),
+                reload=False if hasattr(sys, "_MEIPASS") else True,
+  
+                log_level="debug",
+                debug=True,
+                                workers=1,
+                                limit_concurrency=1
+            )
 
 
 if __name__ == "MMVCServerSIO":
@@ -378,15 +391,30 @@ if __name__ == "__main__":
     if args.https:
         printMessage(f"Prepare to one UVI.1", level=1)
         # HTTPS サーバ起動
-        uvicorn.run(
-            f"{os.path.basename(__file__)[:-3]}:app_socketio",
-            host="0.0.0.0",
-            port=int(PORT),
-            reload=False if hasattr(sys, "_MEIPASS") else True,
-            ssl_keyfile=key_path,
-            ssl_certfile=cert_path,
-            log_level=args.logLevel,
-        )
+
+        if 0:
+            uvicorn.run(
+                f"{os.path.basename(__file__)[:-3]}:app_socketio",
+                host="0.0.0.0",
+                port=int(PORT),
+                reload=False if hasattr(sys, "_MEIPASS") else True,
+                ssl_keyfile=key_path,
+                ssl_certfile=cert_path,
+                log_level=args.logLevel,
+
+            )
+        else:
+             uvicorn.run(
+                            f"{os.path.basename(__file__)[:-3]}:app_socketio",
+                            host="0.0.0.0",
+                            port=int(PORT),
+                            reload=False if hasattr(sys, "_MEIPASS") else True,
+                            ssl_keyfile=key_path,
+                            ssl_certfile=cert_path,
+                         log_level="debug", debug=True,
+                                                                    workers=1, limit_concurrency=1
+
+                        )
         printMessage(f"Prepare to one UVI.1     Finish.jhhhhhhhhhhhh", level=1)
 
     else:
