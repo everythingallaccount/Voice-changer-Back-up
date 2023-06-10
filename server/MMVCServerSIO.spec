@@ -11,6 +11,7 @@ a = Analysis(
     datas=[
     ('C:\\Users\\whousethispc\\anaconda3\\envs\\mmvc-server\\Lib\\site-packages\\fairseq', '.\\fairseq'),
     ('C:\\Users\\whousethispc\\Desktop\\master\\Voice Changer Projectttt\\voice-changer222\\client\\demo\\dist', '.\\dist'),
+    ('C:\\Users\\whousethispc\\Desktop\\master\\Voice Changer Projectttt\\voice-changer222\\server\\pretrain', '.\\pretrain'),
 
     ],
     hiddenimports=[],
