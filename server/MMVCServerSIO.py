@@ -229,7 +229,7 @@ PORT = args.p
 
 
 def localServer(logLevel: str = "critical"):
-    if 0:
+    if 1:
         uvicorn.run(
             f"{os.path.basename(__file__)[:-3]}:app_socketio",
             host="0.0.0.0",
