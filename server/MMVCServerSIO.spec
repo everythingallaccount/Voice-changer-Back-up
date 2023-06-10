@@ -12,6 +12,8 @@ a = Analysis(
     ('C:\\Users\\whousethispc\\anaconda3\\envs\\mmvc-server\\Lib\\site-packages\\fairseq', '.\\fairseq'),
     ('C:\\Users\\whousethispc\\Desktop\\master\\Voice Changer Projectttt\\voice-changer222\\client\\demo\\dist', '.\\dist'),
     ('C:\\Users\\whousethispc\\Desktop\\master\\Voice Changer Projectttt\\voice-changer222\\server\\pretrain', '.\\pretrain'),
+    ('C:\\Users\\whousethispc\\Desktop\\master\\Voice Changer Projectttt\\voice-changer222\\server\\RVC', '.\\RVC'),
+    ('C:\\Users\\whousethispc\\anaconda3\\envs\\mmvc-server\\bin\\nvrtc64_112_0.dll', '.\\'),
 
     ],
     hiddenimports=[],
